@@ -1,0 +1,25 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  # tengo q poner la ruta relativa del archivo docker y el CONTEXTO en el cual se va a correr el build
+  - docker build -t leonardorossi/multi-docker-react -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true leonardorossi/multi-docker-react npm run test
+
+# dsp de que corren los tests tengo q hacer build de todas mis imagenes
+after_success:
+  - docker build -t leonardorossi/multi-client ./client
+  - docker build -t leonardorossi/multi-nginx ./nginx
+  - docker build -t leonardorossi/multi-server ./server
+  - docker build -t leonardorossi/multi-worker ./worker
+  # Loguearme primero con docker CLI porque voy a publicar estas imagenes en Docker HUB
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Tomar todas las imágenes y publicarlas en DOCKER HUB
+  - docker push leonardorossi/multi-client
+  - docker push leonardorossi/multi-nginx
+  - docker push leonardorossi/multi-server
+  - docker push leonardorossi/multi-worker
+
