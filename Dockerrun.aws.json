@@ -6,13 +6,7 @@
       "image": "leonardorossi/multi-client",
       "hostname": "client",
       "essential": false,
-      "memory": 128,
-      "portMappings": [
-        {
-          "hostPort": 3000,
-          "containerPort": 80
-        }
-      ]
+      "memory": 128
     },
     {
       "name": "server",
