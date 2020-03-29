@@ -1,0 +1,36 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinitions": [
+    {
+      "name": "client",
+      "image": "leonardorossi/multi-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "leonardorossi/multi-server",
+      "hostname": "ip", // pongo IP porque es el nombre q va a tener para vincularlo en la red interna
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "leonardorossi/multi-worker",
+      "hostname": "worker",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "leonardorossi/multi-nginx",
+      "hostname": "nginx",
+      "essential": true, // se marca como essential porque si este se cae, tiene q dar de baja todos los demas. Al menos tiene q haber UN essential
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [ "client", "server" ] // Esto usa los "name" para vincularlos con los containers q puse antes
+    }
+  ]
+}
