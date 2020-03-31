@@ -19,6 +19,7 @@ services:
   api:
     depends_on:
       - postgres
+      - redis
     build:
       context: ./server
       dockerfile: Dockerfile.dev
@@ -41,6 +42,8 @@ services:
       - /app/node_modules
       - ./client:/app
   worker:
+    depends_on:
+      - redis
     build:
       context: ./worker
       dockerfile: Dockerfile.dev
